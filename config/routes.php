@@ -72,11 +72,240 @@ Router::scope('/', function (RouteBuilder $routes) {
      * You can remove these routes once you've connected the
      * routes you want in your application.
      */
-    $routes->fallbacks(DashedRoute::class);
+    $routes->fallbacks('DashedRoute');
 });
 
 /**
  * Load all plugin routes. See the Plugin documentation on
  * how to customize the loading of plugin routes.
  */
+Router::scope('/', function ($routes) {
+    $routes->extensions(['json']);   
+    $routes->resources('Slides', [
+        'map' => [
+            'preview/' => [
+                'action' => 'preview',
+                'method' => 'POST'
+            ],
+            'getAdmin' => [
+                'action' => 'getAdmin',
+                'method' => 'GET'
+            ],
+            'getHeader' => [
+                'action' => 'getHeader',
+                'method' => 'GET'
+            ],
+            'saveMany' => [
+                'action' => 'saveMany',
+                'method' => 'POST'
+            ],
+        ]
+    ]);
+    $routes->resources('Productos', [
+        'map' => [
+            'getLineasProductos/' => [
+                'action' => 'getLineasProductos',
+                'method' => 'GET'
+            ],
+            'getProductosMain/' => [
+                'action' => 'getProductosMain',
+                'method' => 'GET'
+            ],
+            'getPages' => [
+                'action' => 'getPages',
+                'method' => 'GET'
+            ],
+            'preview/' => [
+                'action' => 'preview',
+                'method' => 'POST'
+            ],
+            'getAdmin' => [
+                'action' => 'getAdmin',
+                'method' => 'GET'
+            ],
+            'deleteImage' => [
+                'action' => 'deleteImage',
+                'method' => 'POST'
+            ],
+            'getTreeList/:spacer' => [
+                'action' => 'getTreeList',
+                'method' => 'GET'
+            ],
+            'previewBrochure/' => [
+                'action' => 'previewBrochure',
+                'method' => 'POST'
+            ],
+            'getRootProductos' => [
+                'action' => 'getRootProductos',
+                'method' => 'GET'
+            ],
+            'remove' => [
+                'action' => 'remove',
+                'method' => 'POST'
+            ],
+            'upload/' => [
+                'action' => 'upload',
+                'method' => 'POST'
+            ],
+            'getPublic' => [
+                'action' => 'getPublic',
+                'method' => 'GET'
+            ]
+        ]
+    ]);
+    $routes->resources('Politicas', [
+        'map' => [
+            'preview/' => [
+                'action' => 'preview',
+                'method' => 'POST'
+            ],
+            'getAdmin' => [
+                'action' => 'getAdmin',
+                'method' => 'GET'
+            ]
+        ]
+    ]);
+    $routes->resources('Infos', [
+        'map' => [
+            'saveMany' => [
+                'action' => 'saveMany',
+                'method' => 'POST'
+            ],
+            'getData/:data' => [
+                'action' => 'getData',
+                'method' => 'GET'
+            ],
+            'getDataMany' => [
+                'action' => 'getDataMany',
+                'method' => 'POST'
+            ],
+            'getDataByData' => [
+                'action' => 'getDataByData',
+                'method' => 'POST'
+            ]
+        ]
+    ]);
+    $routes->resources('Obras', [
+        'map' => [
+            'preview/' => [
+                'action' => 'preview',
+                'method' => 'POST'
+            ],
+            'getAdmin' => [
+                'action' => 'getAdmin',
+                'method' => 'GET'
+            ],
+            'deleteImage' => [
+                'action' => 'deleteImage',
+                'method' => 'POST'
+            ]
+        ]
+    ]);
+    $routes->resources('Clientes', [
+        'map' => [
+            'getAdmin' => [
+                'action' => 'getAdmin',
+                'method' => 'GET'
+            ],
+            'getCiudades' => [
+                'action' => 'getCiudades',
+                'method' => 'GET'
+            ],
+            'getRubros' => [
+                'action' => 'getRubros',
+                'method' => 'GET'
+            ],
+            'getClientesByCiudad/:ciudad' => [
+                'action' => 'getClientesByCiudad',
+                'method' => 'GET'
+            ],
+            'getClientesByRubro/:rubro' => [
+                'action' => 'getClientesByRubro',
+                'method' => 'GET'
+            ]
+        ]
+    ]);
+    $routes->resources('Convocatorias', [
+        'map' => [
+            'preview/' => [
+                'action' => 'preview',
+                'method' => 'POST'
+            ],
+            'getAdmin' => [
+                'action' => 'getAdmin',
+                'method' => 'GET'
+            ]
+        ]
+    ]);
+    $routes->resources('TipoSugerencias', [
+        'map' => [
+            'sendMessage/' => [
+                'action' => 'sendMessage',
+                'method' => 'POST'
+            ],
+            'getAdmin' => [
+                'action' => 'getAdmin',
+                'method' => 'GET'
+            ],
+            'removeDetalle' => [
+                'action' => 'removeDetalle',
+                'method' => 'POST'
+            ]
+        ]
+    ]);
+    $routes->resources('Pages', [
+        'map' => [
+            'getAdmin' => [
+                'action' => 'getAdmin',
+                'method' => 'GET'
+            ],
+            'getPages/:type' => [
+                'action' => 'getPages',
+                'method' => 'GET'
+            ],
+            'upload/' => [
+                'action' => 'upload',
+                'method' => 'POST'
+            ]
+        ]
+    ]);
+    $routes->resources('Asesorias', [
+        'map' => [
+            'getAdmin' => [
+                'action' => 'getAdmin',
+                'method' => 'GET'
+            ],
+            'upload/' => [
+                'action' => 'upload',
+                'method' => 'POST'
+            ]
+        ]
+    ]);
+    $routes->resources('Roles', [
+        'map' => [
+            'getAdmin' => [
+                'action' => 'getAdmin',
+                'method' => 'GET'
+            ]
+        ]
+    ]);
+    $routes->resources('Users', [
+        'map' => [
+            'getAdmin' => [
+                'action' => 'getAdmin',
+                'method' => 'GET'
+            ],
+            'login' => [
+                'action' => 'login',
+                'method' => 'POST'
+            ],
+            'token' => [
+                'action' => 'token',
+                'method' => 'POST'
+            ]
+        ]
+    ]);
+    $routes->resources('Controllers');
+});
+
 Plugin::routes();
