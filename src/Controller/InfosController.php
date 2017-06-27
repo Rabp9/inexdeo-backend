@@ -14,7 +14,7 @@ class InfosController extends AppController
 {
     public function initialize() {
         parent::initialize();
-        $this->Auth->allow(['getDataMany', 'getData']);
+        $this->Auth->allow(['getDataMany', 'getData', 'getDataByData', 'add']);
     }
     /**
      * Add method
