@@ -80,75 +80,51 @@ Router::scope('/', function (RouteBuilder $routes) {
  * how to customize the loading of plugin routes.
  */
 Router::scope('/', function ($routes) {
-    $routes->extensions(['json']);   
-    $routes->resources('Slides', [
-        'map' => [
-            'preview/' => [
-                'action' => 'preview',
-                'method' => 'POST'
-            ],
-            'getAdmin' => [
-                'action' => 'getAdmin',
-                'method' => 'GET'
-            ],
-            'getHeader' => [
-                'action' => 'getHeader',
-                'method' => 'GET'
-            ],
-            'saveMany' => [
-                'action' => 'saveMany',
-                'method' => 'POST'
-            ],
-        ]
-    ]);
+    $routes->extensions(['json']);
     $routes->resources('Productos', [
         'map' => [
-            'getLineasProductos/' => [
-                'action' => 'getLineasProductos',
+            'getRandom/:num' => [
+                'action' => 'getRandom',
                 'method' => 'GET'
-            ],
-            'getProductosMain/' => [
-                'action' => 'getProductosMain',
-                'method' => 'GET'
-            ],
-            'getPages' => [
-                'action' => 'getPages',
-                'method' => 'GET'
-            ],
-            'preview/' => [
-                'action' => 'preview',
-                'method' => 'POST'
             ],
             'getAdmin' => [
                 'action' => 'getAdmin',
                 'method' => 'GET'
             ],
+            'preview/' => [
+                'action' => 'preview',
+                'method' => 'POST'
+            ], 
             'deleteImage' => [
                 'action' => 'deleteImage',
                 'method' => 'POST'
-            ],
-            'getTreeList/:spacer' => [
-                'action' => 'getTreeList',
-                'method' => 'GET'
-            ],
+            ],  
             'previewBrochure/' => [
                 'action' => 'previewBrochure',
                 'method' => 'POST'
-            ],
-            'getRootProductos' => [
-                'action' => 'getRootProductos',
-                'method' => 'GET'
-            ],
+            ], 
+            'previewPortada/' => [
+                'action' => 'previewPortada',
+                'method' => 'POST'
+            ], 
             'remove' => [
                 'action' => 'remove',
                 'method' => 'POST'
-            ],
-            'upload/' => [
-                'action' => 'upload',
-                'method' => 'POST'
-            ],
-            'getPublic' => [
-                'action' => 'getPublic',
+            ]
+        ]
+    ]);
+    $routes->resources('Servicios', [
+        'map' => [
+            'getRandom/:num' => [
+                'action' => 'getRandom',
+                'method' => 'GET'
+            ]
+        ]
+    ]);
+    $routes->resources('Proyectos', [
+        'map' => [
+            'getRandom/:num' => [
+                'action' => 'getRandom',
                 'method' => 'GET'
             ]
         ]
@@ -185,19 +161,19 @@ Router::scope('/', function ($routes) {
             ]
         ]
     ]);
-    $routes->resources('Obras', [
+    $routes->resources('Proyectos', [
         'map' => [
-            'preview/' => [
-                'action' => 'preview',
-                'method' => 'POST'
-            ],
-            'getAdmin' => [
-                'action' => 'getAdmin',
+            'getRandom/:num' => [
+                'action' => 'getRandom',
                 'method' => 'GET'
-            ],
-            'deleteImage' => [
-                'action' => 'deleteImage',
-                'method' => 'POST'
+            ]
+        ]
+    ]);
+    $routes->resources('Servicios', [
+        'map' => [
+            'getRandom/:num' => [
+                'action' => 'getRandom',
+                'method' => 'GET'
             ]
         ]
     ]);
