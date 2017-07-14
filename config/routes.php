@@ -129,6 +129,7 @@ Router::scope('/', function ($routes) {
             ]
         ]
     ]);
+    $routes->resources('Albumes');
     $routes->resources('Politicas', [
         'map' => [
             'preview/' => [
