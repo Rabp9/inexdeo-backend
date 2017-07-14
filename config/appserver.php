@@ -229,9 +229,9 @@ return [
              * the following line and set the port accordingly
              */
             //'port' => 'non_standard_port_number',
-            'username' => 'rabp99_inexdeo',
-            'password' => '12345678',
-            'database' => 'rabp99_inexdeo',
+            'username' => 'root',
+            'password' => '',
+            'database' => 'inexdeo',
             'encoding' => 'utf8',
             'timezone' => 'UTC',
             'flags' => [],
