@@ -12,7 +12,7 @@ class AlbumesController extends AppController
 {
     public function initialize() {
         parent::initialize();
-        $this->Auth->allow(['index']);
+        $this->Auth->allow(['index', 'view']);
     }
 
     /**
@@ -28,4 +28,14 @@ class AlbumesController extends AppController
         $this->set(compact('albumes'));
         $this->set('_serialize', ['albumes']);
     }
+    
+    public function view($id) {
+        $album = $this->Albumes->get($id, [
+            'contain' => 'Imagenes'
+        ]);
+        
+        $this->set(compact('album'));
+        $this->set('_serialize', ['album']);
+    }
+    
 }
