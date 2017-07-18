@@ -46,4 +46,22 @@ class ProyectosTable extends Table
         ]);
         
     }
+
+     public function afterSave($event, $entity, $options) {
+        $imageOperations = [
+            'thumbnail' => [
+                'height' => 600,
+                'width' => 200
+            ],
+        ];
+        
+        $path = WWW_ROOT . "img". DS . 'proyectos' . DS;
+    
+        $this->processImage($path . $entity->img_portada,
+            $path . $entity->img_portada . '_thumb.png',
+            [],
+            $imageOperations
+        );
+        return;
+    }
 }

@@ -118,6 +118,30 @@ Router::scope('/', function ($routes) {
             'getRandom/:num' => [
                 'action' => 'getRandom',
                 'method' => 'GET'
+            ],
+            'getAdmin' => [
+                'action' => 'getAdmin',
+                'method' => 'GET'
+            ],
+            'preview/' => [
+                'action' => 'preview',
+                'method' => 'POST'
+            ], 
+            'deleteImage' => [
+                'action' => 'deleteImage',
+                'method' => 'POST'
+            ],  
+            'previewBrochure/' => [
+                'action' => 'previewBrochure',
+                'method' => 'POST'
+            ], 
+            'previewPortada/' => [
+                'action' => 'previewPortada',
+                'method' => 'POST'
+            ], 
+            'remove' => [
+                'action' => 'remove',
+                'method' => 'POST'
             ]
         ]
     ]);
@@ -126,6 +150,30 @@ Router::scope('/', function ($routes) {
             'getRandom/:num' => [
                 'action' => 'getRandom',
                 'method' => 'GET'
+            ],
+            'getAdmin' => [
+                'action' => 'getAdmin',
+                'method' => 'GET'
+            ],
+            'preview/' => [
+                'action' => 'preview',
+                'method' => 'POST'
+            ], 
+            'deleteImage' => [
+                'action' => 'deleteImage',
+                'method' => 'POST'
+            ],  
+            'previewBrochure/' => [
+                'action' => 'previewBrochure',
+                'method' => 'POST'
+            ], 
+            'previewPortada/' => [
+                'action' => 'previewPortada',
+                'method' => 'POST'
+            ], 
+            'remove' => [
+                'action' => 'remove',
+                'method' => 'POST'
             ]
         ]
     ]);
