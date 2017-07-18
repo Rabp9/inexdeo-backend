@@ -31,10 +31,11 @@ class ProductosTable extends Table
      */
     public function initialize(array $config) {
         parent::initialize($config);
-
+        
         $this->table('productos');
         $this->displayField('title');
         $this->primaryKey('id');
+        $this->addBehavior('Burzum/Imagine.Imagine');
 
         $this->belongsTo('Estados', [
             'foreignKey' => 'estado_id',
@@ -45,5 +46,23 @@ class ProductosTable extends Table
             'foreignKey' => 'producto_id'
         ]);
         
+    }
+    
+    public function afterSave($event, $entity, $options) {
+        $imageOperations = [
+            'thumbnail' => [
+                'height' => 600,
+                'width' => 200
+            ],
+        ];
+        
+        $path = WWW_ROOT . "img". DS . 'productos' . DS;
+    
+        $this->processImage($path . $entity->img_portada,
+            $path . $entity->img_portada . '_thumb.png',
+            [],
+            $imageOperations
+        );
+        return;
     }
 }

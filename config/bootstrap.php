@@ -228,3 +228,6 @@ if (Configure::read('debug')) {
 
 Plugin::load('Cors', ['bootstrap' => true, 'routes' => false]);
 Plugin::load('ADmad/JwtAuth');
+Plugin::load('Burzum/Imagine');
+
+Configure::write('Imagine.salt', 'iieeddssaa123456');

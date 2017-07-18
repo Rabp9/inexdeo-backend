@@ -89,19 +89,19 @@ class ProductosController extends AppController
                 $dst_portada = WWW_ROOT . "img". DS . 'productos' . DS . $producto->img_portada;
                 $src_portada = WWW_ROOT . "tmp" . DS . $producto->img_portada;
             }
-            
+
+            if ($producto->img_portada) {
+                if (file_exists($src_portada)) {
+                    rename($src_portada, $dst_portada);
+                }
+            }
+
             if ($this->Productos->save($producto)) {
                 // move file
                 
                 if ($producto->brochure) {
                     if (file_exists($src_brochure)) {
                         rename($src_brochure, $dst_brochure);
-                    }
-                }
-                
-                if ($producto->img_portada) {
-                    if (file_exists($src_portada)) {
-                        rename($src_portada, $dst_portada);
                     }
                 }
                 
