@@ -41,6 +41,7 @@ class AppController extends Controller
         parent::initialize();
 
         $this->loadComponent('RequestHandler');
+        $this->loadComponent('Random');
         $this->loadComponent('Auth', [
             'storage' => 'Memory',
             'authenticate' => [
