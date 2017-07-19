@@ -28,7 +28,6 @@ class ServiciosController extends AppController
         $this->set(compact('servicios'));
         $this->set('_serialize', ['servicios']);
     }
-//c
      public function getAdmin() {
         $this->viewBuilder()->layout(false);
         

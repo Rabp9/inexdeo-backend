@@ -46,7 +46,7 @@ class ServiciosTable extends Table
         ]);
         
     }
-//c
+
      public function afterSave($event, $entity, $options) {
         $imageOperations = [
             'thumbnail' => [

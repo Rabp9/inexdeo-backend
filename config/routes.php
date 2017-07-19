@@ -113,7 +113,8 @@ Router::scope('/', function ($routes) {
             ]
         ]
     ]);
-    //cambios
+    //
+    
     $routes->resources('Servicios', [
         'map' => [
             'getRandom/:num' => [
