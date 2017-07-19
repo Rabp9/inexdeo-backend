@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\Filesystem\File;
 
 /**
  * Productos Controller
@@ -70,13 +71,21 @@ class ProductosController extends AppController
      * @return \Cake\Network\Response|null Redirects on successful add, renders view otherwise.
      */
     public function add() {
-        $this->viewBuilder()->layout(false);
         $producto = $this->Productos->newEntity();
-        $producto->estado_id = 1;
         
         if ($this->request->is('post')) {
-            
             $producto = $this->Productos->patchEntity($producto, $this->request->data);
+            $producto->estado_id = 1;
+            
+            if ($producto->img_portada) {
+                $path_src = WWW_ROOT . "tmp" . DS;
+                $file_tmp = new File($path_src . $producto->img_portada);
+             
+                $path_dst = WWW_ROOT . 'img' . DS . 'productos' . DS;
+                $producto->img_portada = $this->Random->randomFileName($path_dst, 'producto-');
+                
+                $file_tmp->copy($path_dst . $producto->img_portada);
+            }
             
             if ($producto->brochure) {
                 // Brochure
@@ -84,18 +93,6 @@ class ProductosController extends AppController
                 $src_brochure = WWW_ROOT . "tmp" . DS . $producto->brochure;
             }
             
-            if ($producto->img_portada) {
-                // Brochure
-                $dst_portada = WWW_ROOT . "img". DS . 'productos' . DS . $producto->img_portada;
-                $src_portada = WWW_ROOT . "tmp" . DS . $producto->img_portada;
-            }
-
-            if ($producto->img_portada) {
-                if (file_exists($src_portada)) {
-                    rename($src_portada, $dst_portada);
-                }
-            }
-
             if ($this->Productos->save($producto)) {
                 // move file
                 
@@ -111,19 +108,14 @@ class ProductosController extends AppController
                     if (file_exists($src)) {
                         rename($src, $dst);
                     }
-                }             
-                
-                $message =  [
-                    'text' => __('El producto fue guardado correctamente'),
-                    'type' => 'success',
-                ];
+                }
+                $code = 200;
+                $message = 'El producto fue guardado correctamente';
             } else {
-                $message =  [
-                    'text' => __('El producto no fue guardado correctamente'),
-                    'type' => 'error',
-                ];
+                $message = 'El producto no fue guardado correctamente';
             }
         }
+        
         $this->set(compact('producto', 'message'));
         $this->set('_serialize', ['producto', 'message']);
     }
@@ -244,7 +236,7 @@ class ProductosController extends AppController
             $filename = "producto-" . $this->randomString();
             $url = WWW_ROOT . "tmp" . DS . $filename;
             $dst_final = WWW_ROOT . "img". DS . 'productos' . DS . $filename;
-                        
+            
             while (file_exists($dst_final)) {
                 $filename = "producto-" . $this->randomString();
                 $url = WWW_ROOT . "tmp" . DS . $filename;

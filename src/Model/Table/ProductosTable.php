@@ -47,7 +47,7 @@ class ProductosTable extends Table
         ]);
         
     }
-    
+    /*
     public function afterSave($event, $entity, $options) {
         $imageOperations = [
             'thumbnail' => [
@@ -64,5 +64,5 @@ class ProductosTable extends Table
             $imageOperations
         );
         return;
-    }
+    }*/
 }
