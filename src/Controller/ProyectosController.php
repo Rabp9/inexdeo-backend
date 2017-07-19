@@ -28,7 +28,7 @@ class ProyectosController extends AppController
         $this->set(compact('proyectos'));
         $this->set('_serialize', ['proyectos']);
     }
-    
+    //c
     public function getAdmin() {
         $this->viewBuilder()->layout(false);
         
