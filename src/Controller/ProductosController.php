@@ -232,8 +232,8 @@ class ProductosController extends AppController
         
         if ($this->request->is("post")) {
             $portada = $this->request->data["file"];
-            
-            $filename = "producto-" . $this->randomString();
+
+            $filename = "producto-" . $this->Random->randomFileName($path_dst, 'producto-');
             $url = WWW_ROOT . "tmp" . DS . $filename;
             $dst_final = WWW_ROOT . "img". DS . 'productos' . DS . $filename;
             
