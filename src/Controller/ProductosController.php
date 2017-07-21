@@ -79,12 +79,12 @@ class ProductosController extends AppController
             
             if ($producto->img_portada) {
                 $path_src = WWW_ROOT . "tmp" . DS;
-                $file_tmp = new File($path_src . $producto->img_portada);
+                $file_src = new File($path_src . $producto->img_portada);
              
                 $path_dst = WWW_ROOT . 'img' . DS . 'productos' . DS;
-                $producto->img_portada = $this->Random->randomFileName($path_dst, 'producto-');
+                $producto->img_portada = $this->Random->randomFileName($path_dst, 'producto-', $file_src->ext());
                 
-                $file_tmp->copy($path_dst . $producto->img_portada);
+                $file_src->copy($path_dst . $producto->img_portada);
             }
             
             if ($producto->brochure) {
@@ -232,30 +232,22 @@ class ProductosController extends AppController
         
         if ($this->request->is("post")) {
             $portada = $this->request->data["file"];
+            
+            $path_dst = WWW_ROOT . "tmp" . DS;
+            $ext = pathinfo($portada['name'], PATHINFO_EXTENSION);
+            $filename = 'producto-' . $this->Random->randomString() . '.' . $ext;
+           
+            $filename_src = $portada["tmp_name"];
+            $file_src = new File($filename_src);
 
-            $filename = "producto-" . $this->Random->randomFileName($path_dst, 'producto-');
-            $url = WWW_ROOT . "tmp" . DS . $filename;
-            $dst_final = WWW_ROOT . "img". DS . 'productos' . DS . $filename;
-            
-            while (file_exists($dst_final)) {
-                $filename = "producto-" . $this->randomString();
-                $url = WWW_ROOT . "tmp" . DS . $filename;
-                $dst_final = WWW_ROOT . "img". DS . 'productos' . DS . $filename;
-            }
-            
-            if (move_uploaded_file($portada["tmp_name"], $url)) {
-                $message = [
-                    "type" => "success",
-                    "text" => "La portada fue subida con éxito"
-                ];
+            if ($file_src->copy($path_dst . $filename)) {
+                $code = 200;
+                $message = 'El producto fue guardado correctamente';
             } else {
-                $message = [
-                    "type" => "error",
-                    "text" => "La portada no fue subida con éxito",
-                ];
+                $message = "La portada no fue subida con éxito";
             }
             
-            $this->set(compact("message", "filename"));
+            $this->set(compact("code", "message", "filename"));
             $this->set("_serialize", ["message", "filename"]);
         }
     }

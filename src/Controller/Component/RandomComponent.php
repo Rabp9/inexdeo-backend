@@ -19,7 +19,7 @@ class RandomComponent extends Component
         return $str;
     }
     
-    public function randomFileName($path, $prefix = '', $length = 8, $extension) {
+    public function randomFileName($path, $prefix = '', $extension, $length = 8) {
         do {
             $filename = $prefix . $this->randomString($length);
             $file = new File($path . $filename);

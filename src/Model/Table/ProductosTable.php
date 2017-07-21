@@ -47,7 +47,7 @@ class ProductosTable extends Table
         ]);
         
     }
-    /*
+    
     public function afterSave($event, $entity, $options) {
         $imageOperations = [
             'thumbnail' => [
@@ -58,11 +58,13 @@ class ProductosTable extends Table
         
         $path = WWW_ROOT . "img". DS . 'productos' . DS;
     
+        $ext = pathinfo($entity->img_portada, PATHINFO_EXTENSION);
+        $filename_base = basename($entity->img_portada, '.' . $ext);
         $this->processImage($path . $entity->img_portada,
-            $path . $entity->img_portada . '_thumb.png',
+            $path . $filename_base . '_thumb.' . $ext,
             [],
             $imageOperations
         );
         return;
-    }*/
+    }
 }
