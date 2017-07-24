@@ -91,24 +91,19 @@ class ProductosController extends AppController
                 // Brochure
                 $dst_brochure = WWW_ROOT . "files". DS . 'brochures' . DS . $producto->brochure;
                 $src_brochure = WWW_ROOT . "tmp" . DS . $producto->brochure;
+                if (file_exists($src_brochure)) {
+                    rename($src_brochure, $dst_brochure);
+                }
             }
             
+            foreach ($producto->producto_images as $k_image => $producto_image) {
+                $path_src = WWW_ROOT . "tmp" . DS;
+                $file_src = new File($path_src . $producto_image->url);
+                $path_dst = WWW_ROOT . 'img' . DS . 'productos' . DS;
+                $producto->producto_images[$k_image]->url = $this->Random->randomFileName($path_dst, 'producto-', $file_src->ext());
+                $file_src->copy($path_dst . $producto->producto_images[$k_image]->url);
+            }
             if ($this->Productos->save($producto)) {
-                // move file
-                
-                if ($producto->brochure) {
-                    if (file_exists($src_brochure)) {
-                        rename($src_brochure, $dst_brochure);
-                    }
-                }
-                
-                foreach ($producto->producto_images as $producto_image) {
-                    $src = WWW_ROOT . "tmp" . DS . $producto_image->url;
-                    $dst = WWW_ROOT . "img". DS . 'productos' . DS . $producto_image->url;
-                    if (file_exists($src)) {
-                        rename($src, $dst);
-                    }
-                }
                 $code = 200;
                 $message = 'El producto fue guardado correctamente';
             } else {
@@ -116,8 +111,8 @@ class ProductosController extends AppController
             }
         }
         
-        $this->set(compact('producto', 'message'));
-        $this->set('_serialize', ['producto', 'message']);
+        $this->set(compact('producto', 'message', 'code'));
+        $this->set('_serialize', ['producto', 'message', 'code']);
     }
     
     public function preview() {
@@ -128,25 +123,20 @@ class ProductosController extends AppController
             $images = $this->request->data["files"];
             
             foreach ($images as $image) {
-                $filename = "producto-" . $this->randomString();
-                $url = WWW_ROOT . "tmp" . DS . $filename;
-                $dst_final = WWW_ROOT . "img". DS . 'productos' . DS . $filename;
-                
-                while (file_exists($dst_final)) {
-                    $filename = "producto-" . $this->randomString();
-                    $url = WWW_ROOT . "tmp" . DS . $filename;
-                    $dst_final = WWW_ROOT . "img". DS . 'productos' . DS . $filename;
-                }
+                $path_dst = WWW_ROOT . "tmp" . DS;
+                $ext = pathinfo($image['name'], PATHINFO_EXTENSION);
+                $filename = 'producto-' . $this->Random->randomString() . '.' . $ext;
 
-                if (move_uploaded_file($image["tmp_name"], $url)) {
+                $filename_src = $image["tmp_name"];
+                $file_src = new File($filename_src);
+
+                if ($file_src->copy($path_dst . $filename)) {
                     $filenames[] = $filename;
                 } else {
-                    $message = [
-                        "type" => "error",
-                        'text' => 'Algunas imágenes no pudieron ser cargadas correctamente'
-                    ];
+                    $message = 'Algunas imágenes no pudieron ser cargadas';
                 }
             }
+            $message = 'Todas las imágenes fueron cargadas';
             $this->set(compact("message", "filenames"));
             $this->set("_serialize", ["message", "filenames"]);
         }
