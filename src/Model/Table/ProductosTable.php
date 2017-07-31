@@ -67,31 +67,36 @@ class ProductosTable extends Table
         if ($entity->img_portada) {
             $ext = pathinfo($entity->img_portada, PATHINFO_EXTENSION);
             $filename_base = basename($entity->img_portada, '.' . $ext);
-            $this->processImage($path . $entity->img_portada,
-                $path . $filename_base . '_large.' . $ext,
-                [],
-                $imageOperationsLarge
-            );      
-            $this->processImage($path . $entity->img_portada,
-                $path . $filename_base . '_small.' . $ext,
-                [],
-                $imageOperationsSmall
-            );
+            if (file_exists($path . $entity->img_portada)) {
+                $this->processImage($path . $entity->img_portada,
+                    $path . $filename_base . '_large.' . $ext,
+                    [],
+                    $imageOperationsLarge
+                );
+                $this->processImage($path . $entity->img_portada,
+                    $path . $filename_base . '_small.' . $ext,
+                    [],
+                    $imageOperationsSmall
+                );
+            }
         }
         if (sizeof($entity->producto_images) > 0) {
             foreach ($entity->producto_images as $producto_image) {
                 $ext = pathinfo($producto_image->url, PATHINFO_EXTENSION);
                 $filename_base = basename($producto_image->url, '.' . $ext);
-                $this->processImage($path . $producto_image->url,
-                    $path . $filename_base . '_large.' . $ext,
-                    [],
-                    $imageOperationsLarge
-                );      
-                $this->processImage($path . $producto_image->url,
-                    $path . $filename_base . '_small.' . $ext,
-                    [],
-                    $imageOperationsSmall
-                );
+                
+                if (file_exists($path . $producto_image->url)) {
+                    $this->processImage($path . $producto_image->url,
+                        $path . $filename_base . '_large.' . $ext,
+                        [],
+                        $imageOperationsLarge
+                    );      
+                    $this->processImage($path . $producto_image->url,
+                        $path . $filename_base . '_small.' . $ext,
+                        [],
+                        $imageOperationsSmall
+                    );
+                }
             }
         }
     }

@@ -13,7 +13,7 @@ class ProductosController extends AppController
 {
     public function initialize() {
         parent::initialize();
-        $this->Auth->allow(['getRandom', 'index', 'view']);
+        $this->Auth->allow(['getRandom', 'index', 'view', 'download']);
     }
 
     /**
