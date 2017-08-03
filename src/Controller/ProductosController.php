@@ -97,11 +97,13 @@ class ProductosController extends AppController
             }
             
             foreach ($producto->producto_images as $k_image => $producto_image) {
-                $path_src = WWW_ROOT . "tmp" . DS;
-                $file_src = new File($path_src . $producto_image->url);
-                $path_dst = WWW_ROOT . 'img' . DS . 'productos' . DS;
-                $producto->producto_images[$k_image]->url = $this->Random->randomFileName($path_dst, 'producto-', $file_src->ext());
-                $file_src->copy($path_dst . $producto->producto_images[$k_image]->url);
+                if (!isset($producto_image->id)) {
+                    $path_src = WWW_ROOT . "tmp" . DS;
+                    $file_src = new File($path_src . $producto_image->url);
+                    $path_dst = WWW_ROOT . 'img' . DS . 'productos' . DS;
+                    $producto->producto_images[$k_image]->url = $this->Random->randomFileName($path_dst, 'producto-', $file_src->ext());
+                    $file_src->copy($path_dst . $producto->producto_images[$k_image]->url);
+                }
             }
             if ($this->Productos->save($producto)) {
                 $code = 200;
