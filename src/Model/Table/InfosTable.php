@@ -32,5 +32,41 @@ class InfosTable extends Table
         $this->table('infos');
         $this->displayField('id');
         $this->primaryKey('id');
+        $this->addBehavior('Burzum/Imagine.Imagine');
+    }
+    
+    public function afterSave($event, $entity, $options) {
+        $imageOperationsLarge = [
+            'thumbnail' => [
+                'height' => 800,
+                'width' => 800
+            ],
+        ];
+        $imageOperationsSmall = [
+            'thumbnail' => [
+                'height' => 400,
+                'width' => 400
+            ],
+        ];
+        
+        $path = WWW_ROOT . "img". DS . 'bg' . DS;
+        $bgs = array('bg_quienes_somos', 'bg_contactanos', 'bg_mision', 'bg_historia', 'bg_hero');
+                
+        if (in_array($entity->data, $bgs)) {
+            $ext = pathinfo($entity->value, PATHINFO_EXTENSION);
+            $filename_base = basename($entity->value, '.' . $ext);
+            if (file_exists($path . $entity->value)) {
+                $this->processImage($path . $entity->value,
+                    $path . $filename_base . '_large.' . $ext,
+                    [],
+                    $imageOperationsLarge
+                );
+                $this->processImage($path . $entity->value,
+                    $path . $filename_base . '_small.' . $ext,
+                    [],
+                    $imageOperationsSmall
+                );
+            }
+        }
     }
 }
