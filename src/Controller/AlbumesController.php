@@ -75,7 +75,7 @@ class AlbumesController extends AppController
                 if (!isset($imagen->id)) {
                     $path_src = WWW_ROOT . "tmp" . DS;
                     $file_src = new File($path_src .$imagen->url);
-                    $path_dst = WWW_ROOT . 'img' . DS . 'albumes' . DS;
+                    $path_dst = WWW_ROOT . 'img' . DS . 'galeria' . DS;
                     $album->imagenes[$k_image]->url = $this->Random->randomFileName($path_dst, 'album-', $file_src->ext());
                     $file_src->copy($path_dst .$album->imagenes[$k_image]->url);
                 }
@@ -117,6 +117,54 @@ class AlbumesController extends AppController
             $this->set(compact("message", "filenames"));
             $this->set("_serialize", ["message", "filenames"]);
         }
+    }
+
+    private function randomString($length = 6) {
+        $str = "";
+        $characters = array_merge(range('A','Z'), range('a','z'), range('0','9'));
+        $max = count($characters) - 1;
+        for ($i = 0; $i < $length; $i++) {
+            $rand = mt_rand(0, $max);
+            $str .= $characters[$rand];
+        }
+        return $str;
+    }
+
+    public function deleteImage() {
+        $id = $this->request->getData()['id'];
+        
+        $imagenes = $this->Albumes->Imagenes->get($id);
+        if ($this->Albumes->Imagenes->delete($imagenes)) {
+            $message =  [
+                'text' => __('La imagen fue eliminada correctamente'),
+                'type' => 'success',
+            ];
+        } else {
+            $message =  [
+                'text' => __('La imagen no fue eliminada correctamente'),
+                'type' => 'error',
+            ];
+        }
+        $this->set(compact("message"));
+        $this->set("_serialize", ["message"]);
+    }
+
+    public function remove() {
+        $album = $this->Albumes->get($this->request->getData('id'));
+        
+        if ($this->Albumes->delete($album)) {
+            $message = [
+                "type" => "success",
+                "text" => "El Álbum fue eliminado con éxito"
+            ];
+        } else {
+            $message = [
+                "type" => "error",
+                "text" => "El Álbum no fue eliminado con éxito",
+            ];
+        }
+        
+        $this->set(compact("message"));
     }
     
 }

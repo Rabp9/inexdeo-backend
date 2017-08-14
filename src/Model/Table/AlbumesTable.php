@@ -36,6 +36,7 @@ class AlbumesTable extends Table
         $this->table('albumes');
         $this->displayField('descripcion');
         $this->primaryKey('id');
+        $this->addBehavior('Burzum/Imagine.Imagine');
 
         $this->belongsTo('Estados', [
             'foreignKey' => 'estado_id',
@@ -61,7 +62,7 @@ class AlbumesTable extends Table
             ],
         ];
         
-        $path = WWW_ROOT . "img". DS . 'albumes' . DS;
+        $path = WWW_ROOT . "img". DS . 'galeria' . DS;
         
         if (sizeof($entity->imagenes) > 0) {
             foreach ($entity->imagenes as $imagen) {

@@ -189,6 +189,14 @@ Router::scope('/', function ($routes) {
             'preview/' => [
                 'action' => 'preview',
                 'method' => 'POST'
+            ],
+            'deleteImage' => [
+                'action' => 'deleteImage',
+                'method' => 'POST'
+            ],
+            'remove' => [
+                'action' => 'remove',
+                'method' => 'POST'
             ]
         ]
     ]);
