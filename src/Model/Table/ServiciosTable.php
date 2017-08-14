@@ -44,7 +44,7 @@ class ServiciosTable extends Table
         
         $this->hasMany('ServicioImages', [
             'foreignKey' => 'servicio_id'
-        ]);
+        ])->setDependent(true);
         
     }
 

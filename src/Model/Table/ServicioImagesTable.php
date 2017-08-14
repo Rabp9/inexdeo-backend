@@ -7,17 +7,17 @@ use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
 /**
- * ProductoImages Model
+ * ServicioImages Model
  *
- * @property \Cake\ORM\Association\BelongsTo $Productos
+ * @property \Cake\ORM\Association\BelongsTo $Servicios
  *
- * @method \App\Model\Entity\ProductoImage get($primaryKey, $options = [])
- * @method \App\Model\Entity\ProductoImage newEntity($data = null, array $options = [])
- * @method \App\Model\Entity\ProductoImage[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\ProductoImage|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\ProductoImage patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method \App\Model\Entity\ProductoImage[] patchEntities($entities, array $data, array $options = [])
- * @method \App\Model\Entity\ProductoImage findOrCreate($search, callable $callback = null, $options = [])
+ * @method \App\Model\Entity\ServicioImage get($primaryKey, $options = [])
+ * @method \App\Model\Entity\ServicioImage newEntity($data = null, array $options = [])
+ * @method \App\Model\Entity\ServicioImage[] newEntities(array $data, array $options = [])
+ * @method \App\Model\Entity\ServicioImage|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\ServicioImage patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \App\Model\Entity\ServicioImage[] patchEntities($entities, array $data, array $options = [])
+ * @method \App\Model\Entity\ServicioImage findOrCreate($search, callable $callback = null, $options = [])
  */
 class ServicioImagesTable extends Table
 {
