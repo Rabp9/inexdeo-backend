@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\Filesystem\File;
 
 /**
  * Infos Controller
@@ -113,5 +114,58 @@ class InfosController extends AppController
         
         $this->set(compact('infos'));
         $this->set('_serialize', ['infos']);
+    }
+    
+    public function previewFondo() {
+        $this->viewBuilder()->layout(false);
+        
+        if ($this->request->is("post")) {
+            $fondo = $this->request->data["file"];
+            
+            $path_dst = WWW_ROOT . "tmp" . DS;
+            $ext = pathinfo($fondo['name'], PATHINFO_EXTENSION);
+            $filename = 'fondo-' . $this->Random->randomString() . '.' . $ext;
+           
+            $filename_src = $fondo["tmp_name"];
+            $file_src = new File($filename_src);
+
+            if ($file_src->copy($path_dst . $filename)) {
+                $code = 200;
+                $message = 'El fondo fue guardado correctamente';
+            } else {
+                $message = "El fondo no fue subido con éxito";
+            }
+            
+            $this->set(compact("code", "message", "filename"));
+            $this->set("_serialize", ["message", "filename"]);
+        }
+    }
+    
+    public function saveFondo() {
+        $fondo = $this->Infos->newEntity();
+        if ($this->request->is('post')) {
+            
+            $fondo = $this->Infos->patchEntity($fondo, $this->request->data);
+            
+            if ($fondo->value) {
+                $path_src = WWW_ROOT . "tmp" . DS;
+                $file_src = new File($path_src . $fondo->value);
+             
+                $path_dst = WWW_ROOT . 'img' . DS . 'bg' . DS;
+                $fondo->value = $this->Random->randomFileName($path_dst, 'fondo-', $file_src->ext());
+                
+                $file_src->copy($path_dst . $fondo->value);
+            }
+            
+            if ($this->Infos->save($fondo)) {
+                $code = 200;
+                $message = 'El fondo fue guardado correctamente';
+            } else {
+                $message = 'El fondo no fue guardado correctamente';
+            }
+        }
+        
+        $this->set(compact('fondo', 'message', 'code'));
+        $this->set('_serialize', ['fondo', 'message', 'code']);
     }
 }

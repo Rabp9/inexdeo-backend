@@ -221,6 +221,14 @@ Router::scope('/', function ($routes) {
             'getDataByData' => [
                 'action' => 'getDataByData',
                 'method' => 'POST'
+            ],
+            'previewFondo' => [
+                'action' => 'previewFondo',
+                'method' => 'POST'
+            ],
+            'saveFondo' => [
+                'action' => 'saveFondo',
+                'method' => 'POST'
             ]
         ]
     ]);
