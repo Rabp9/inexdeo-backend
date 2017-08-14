@@ -147,6 +147,7 @@ Router::scope('/', function ($routes) {
             ]
         ]
     ]);
+    
     $routes->resources('Proyectos', [
         'map' => [
             'getRandom/:num' => [
@@ -179,7 +180,18 @@ Router::scope('/', function ($routes) {
             ]
         ]
     ]);
-    $routes->resources('Albumes');
+    $routes->resources('Albumes', [
+        'map' => [
+            'getAdmin' => [
+                'action' => 'getAdmin',
+                'method' => 'GET'
+            ],
+            'preview/' => [
+                'action' => 'preview',
+                'method' => 'POST'
+            ]
+        ]
+    ]);
     $routes->resources('Politicas', [
         'map' => [
             'preview/' => [
@@ -212,22 +224,7 @@ Router::scope('/', function ($routes) {
             ]
         ]
     ]);
-    $routes->resources('Proyectos', [
-        'map' => [
-            'getRandom/:num' => [
-                'action' => 'getRandom',
-                'method' => 'GET'
-            ]
-        ]
-    ]);
-    $routes->resources('Servicios', [
-        'map' => [
-            'getRandom/:num' => [
-                'action' => 'getRandom',
-                'method' => 'GET'
-            ]
-        ]
-    ]);
+
     $routes->resources('Clientes', [
         'map' => [
             'getAdmin' => [

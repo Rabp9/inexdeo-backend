@@ -6,6 +6,7 @@ use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
+
 /**
  * Albumes Model
  *
@@ -44,5 +45,42 @@ class AlbumesTable extends Table
         $this->hasMany('Imagenes', [
             'foreignKey' => 'album_id'
         ]);
+    }
+
+    public function afterSave($event, $entity, $options) {
+        $imageOperationsLarge = [
+            'thumbnail' => [
+                'height' => 800,
+                'width' => 800
+            ],
+        ];
+        $imageOperationsSmall = [
+            'thumbnail' => [
+                'height' => 400,
+                'width' => 400
+            ],
+        ];
+        
+        $path = WWW_ROOT . "img". DS . 'albumes' . DS;
+        
+        if (sizeof($entity->imagenes) > 0) {
+            foreach ($entity->imagenes as $imagen) {
+                $ext = pathinfo($imagen->url, PATHINFO_EXTENSION);
+                $filename_base = basename($imagen->url, '.' . $ext);
+                
+                if (file_exists($path . $imagen->url)) {
+                    $this->processImage($path . $imagen->url,
+                        $path . $filename_base . '_large.' . $ext,
+                        [],
+                        $imageOperationsLarge
+                    );      
+                    $this->processImage($path . $imagen->url,
+                        $path . $filename_base . '_small.' . $ext,
+                        [],
+                        $imageOperationsSmall
+                    );
+                }
+            }
+        }
     }
 }

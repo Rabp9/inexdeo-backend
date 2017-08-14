@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\Filesystem\File;
 
 /**
  * Servicios Controller
@@ -12,7 +13,7 @@ class ServiciosController extends AppController
 {
     public function initialize() {
         parent::initialize();
-        $this->Auth->allow(['getRandom', 'index', 'view']);
+        $this->Auth->allow(['getRandom', 'index', 'view', 'download']);
     }
 
     /**
@@ -59,62 +60,50 @@ class ServiciosController extends AppController
     }
 
     public function add() {
-        $this->viewBuilder()->layout(false);
         $servicio = $this->Servicios->newEntity();
-        $servicio->estado_id = 1;
         
         if ($this->request->is('post')) {
-            
             $servicio = $this->Servicios->patchEntity($servicio, $this->request->data);
+            $servicio->estado_id = 1;
+            
+            if ($servicio->img_portada) {
+                $path_src = WWW_ROOT . "tmp" . DS;
+                $file_src = new File($path_src . $servicio->img_portada);
+             
+                $path_dst = WWW_ROOT . 'img' . DS . 'servicios' . DS;
+                $servicio->img_portada = $this->Random->randomFileName($path_dst, 'servicio-', $file_src->ext());
+                
+                $file_src->copy($path_dst . $servicio->img_portada);
+            }
             
             if ($servicio->brochure) {
                 // Brochure
                 $dst_brochure = WWW_ROOT . "files". DS . 'brochures' . DS . $servicio->brochure;
                 $src_brochure = WWW_ROOT . "tmp" . DS . $servicio->brochure;
+                if (file_exists($src_brochure)) {
+                    rename($src_brochure, $dst_brochure);
+                }
             }
             
-            if ($servicio->img_portada) {
-                // Brochure
-                $dst_portada = WWW_ROOT . "img". DS . 'servicios' . DS . $servicio->img_portada;
-                $src_portada = WWW_ROOT . "tmp" . DS . $servicio->img_portada;
-            }
-
-            if ($servicio->img_portada) {
-                if (file_exists($src_portada)) {
-                    rename($src_portada, $dst_portada);
+            foreach ($servicio->servicio_images as $k_image => $servicio_image) {
+                if (!isset($servicio_image->id)) {
+                    $path_src = WWW_ROOT . "tmp" . DS;
+                    $file_src = new File($path_src . $servicio_image->url);
+                    $path_dst = WWW_ROOT . 'img' . DS . 'servicios' . DS;
+                    $servicio->servicio_images[$k_image]->url = $this->Random->randomFileName($path_dst, 'servicio-', $file_src->ext());
+                    $file_src->copy($path_dst . $servicio->servicio_images[$k_image]->url);
                 }
             }
-
             if ($this->Servicios->save($servicio)) {
-                // move file
-                
-                if ($servicio->brochure) {
-                    if (file_exists($src_brochure)) {
-                        rename($src_brochure, $dst_brochure);
-                    }
-                }
-                
-                foreach ($servicio->servicio_images as $servicio_image) {
-                    $src = WWW_ROOT . "tmp" . DS . $servicio_image->url;
-                    $dst = WWW_ROOT . "img". DS . 'servicios' . DS . $servicio_image->url;
-                    if (file_exists($src)) {
-                        rename($src, $dst);
-                    }
-                }             
-                
-                $message =  [
-                    'text' => __('El servicio fue guardado correctamente'),
-                    'type' => 'success',
-                ];
+                $code = 200;
+                $message = 'El servicio fue guardado correctamente';
             } else {
-                $message =  [
-                    'text' => __('El servicio no fue guardado correctamente'),
-                    'type' => 'error',
-                ];
+                $message = 'El servicio no fue guardado correctamente';
             }
         }
-        $this->set(compact('servicio', 'message'));
-        $this->set('_serialize', ['servicio', 'message']);
+        
+        $this->set(compact('servicio', 'message', 'code'));
+        $this->set('_serialize', ['servicio', 'message', 'code']);
     }
     
     public function preview() {
@@ -125,25 +114,20 @@ class ServiciosController extends AppController
             $images = $this->request->data["files"];
             
             foreach ($images as $image) {
-                $filename = "servicio-" . $this->randomString();
-                $url = WWW_ROOT . "tmp" . DS . $filename;
-                $dst_final = WWW_ROOT . "img". DS . 'servicios' . DS . $filename;
-                
-                while (file_exists($dst_final)) {
-                    $filename = "servicio-" . $this->randomString();
-                    $url = WWW_ROOT . "tmp" . DS . $filename;
-                    $dst_final = WWW_ROOT . "img". DS . 'servicios' . DS . $filename;
-                }
+                $path_dst = WWW_ROOT . "tmp" . DS;
+                $ext = pathinfo($image['name'], PATHINFO_EXTENSION);
+                $filename = 'servicio-' . $this->Random->randomString() . '.' . $ext;
 
-                if (move_uploaded_file($image["tmp_name"], $url)) {
+                $filename_src = $image["tmp_name"];
+                $file_src = new File($filename_src);
+
+                if ($file_src->copy($path_dst . $filename)) {
                     $filenames[] = $filename;
                 } else {
-                    $message = [
-                        "type" => "error",
-                        'text' => 'Algunas imágenes no pudieron ser cargadas correctamente'
-                    ];
+                    $message = 'Algunas imágenes no pudieron ser cargadas';
                 }
             }
+            $message = 'Todas las imágenes fueron cargadas';
             $this->set(compact("message", "filenames"));
             $this->set("_serialize", ["message", "filenames"]);
         }
@@ -230,29 +214,21 @@ class ServiciosController extends AppController
         if ($this->request->is("post")) {
             $portada = $this->request->data["file"];
             
-            $filename = "servicio-" . $this->randomString();
-            $url = WWW_ROOT . "tmp" . DS . $filename;
-            $dst_final = WWW_ROOT . "img". DS . 'servicios' . DS . $filename;
-                        
-            while (file_exists($dst_final)) {
-                $filename = "servicio-" . $this->randomString();
-                $url = WWW_ROOT . "tmp" . DS . $filename;
-                $dst_final = WWW_ROOT . "img". DS . 'servicios' . DS . $filename;
-            }
-            
-            if (move_uploaded_file($portada["tmp_name"], $url)) {
-                $message = [
-                    "type" => "success",
-                    "text" => "La portada fue subida con éxito"
-                ];
+            $path_dst = WWW_ROOT . "tmp" . DS;
+            $ext = pathinfo($portada['name'], PATHINFO_EXTENSION);
+            $filename = 'servicio-' . $this->Random->randomString() . '.' . $ext;
+           
+            $filename_src = $portada["tmp_name"];
+            $file_src = new File($filename_src);
+
+            if ($file_src->copy($path_dst . $filename)) {
+                $code = 200;
+                $message = 'El servicio fue guardado correctamente';
             } else {
-                $message = [
-                    "type" => "error",
-                    "text" => "La portada no fue subida con éxito",
-                ];
+                $message = "La portada no fue subida con éxito";
             }
             
-            $this->set(compact("message", "filename"));
+            $this->set(compact("code", "message", "filename"));
             $this->set("_serialize", ["message", "filename"]);
         }
     }

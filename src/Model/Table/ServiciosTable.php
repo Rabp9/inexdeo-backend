@@ -35,6 +35,7 @@ class ServiciosTable extends Table
         $this->table('servicios');
         $this->displayField('title');
         $this->primaryKey('id');
+        $this->addBehavior('Burzum/Imagine.Imagine');
 
         $this->belongsTo('Estados', [
             'foreignKey' => 'estado_id',
@@ -47,21 +48,56 @@ class ServiciosTable extends Table
         
     }
 
-     public function afterSave($event, $entity, $options) {
-        $imageOperations = [
+    public function afterSave($event, $entity, $options) {
+        $imageOperationsLarge = [
             'thumbnail' => [
-                'height' => 600,
-                'width' => 200
+                'height' => 800,
+                'width' => 800
+            ],
+        ];
+        $imageOperationsSmall = [
+            'thumbnail' => [
+                'height' => 400,
+                'width' => 400
             ],
         ];
         
         $path = WWW_ROOT . "img". DS . 'servicios' . DS;
-    
-        $this->processImage($path . $entity->img_portada,
-            $path . $entity->img_portada . '_thumb.png',
-            [],
-            $imageOperations
-        );
-        return;
+        
+        if ($entity->img_portada) {
+            $ext = pathinfo($entity->img_portada, PATHINFO_EXTENSION);
+            $filename_base = basename($entity->img_portada, '.' . $ext);
+            if (file_exists($path . $entity->img_portada)) {
+                $this->processImage($path . $entity->img_portada,
+                    $path . $filename_base . '_large.' . $ext,
+                    [],
+                    $imageOperationsLarge
+                );
+                $this->processImage($path . $entity->img_portada,
+                    $path . $filename_base . '_small.' . $ext,
+                    [],
+                    $imageOperationsSmall
+                );
+            }
+        }
+        if (sizeof($entity->servicio_images) > 0) {
+            foreach ($entity->servicio_images as $servicio_image) {
+                $ext = pathinfo($servicio_image->url, PATHINFO_EXTENSION);
+                $filename_base = basename($servicio_image->url, '.' . $ext);
+                
+                if (file_exists($path . $servicio_image->url)) {
+                    $this->processImage($path . $servicio_image->url,
+                        $path . $filename_base . '_large.' . $ext,
+                        [],
+                        $imageOperationsLarge
+                    );      
+                    $this->processImage($path . $servicio_image->url,
+                        $path . $filename_base . '_small.' . $ext,
+                        [],
+                        $imageOperationsSmall
+                    );
+                }
+            }
+        }
     }
 }
