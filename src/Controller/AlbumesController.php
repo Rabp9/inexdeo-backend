@@ -47,29 +47,15 @@ class AlbumesController extends AppController
         $this->set(compact('albumes'));
         $this->set('_serialize', ['albumes']);
     }
-
-    /*public function add() {
-        $album = $this->Albumes->newEntity();
-        if ($this->request->is('post')) {
-            $album = $this->Albumes->patchEntity($album, $this->request->data);
-            $album->estado_id = 1;
-            if ($this->Albumes->save($album)) {
-                $code = 200;
-                $message = 'El album fue creado correctamente';
-            } else {
-                $message = 'El album no pudo ser creado';
-            }
-        }
-        $this->set(compact('album', 'message','code'));
-        $this->set('_serialize', ['album', 'message','code']);
-    }*/
-
+    
     public function add() {
        $album = $this->Albumes->newEntity();
         
         if ($this->request->is('post')) {
-           $album = $this->Albumes->patchEntity($album, $this->request->data);
-           $album->estado_id = 1;
+            $album = $this->Albumes->patchEntity($album, $this->request->data);
+            $album->estado_id = 1;
+            
+            debug($album);
             
             foreach ($album->imagenes as $k_image =>$imagen) {
                 if (!isset($imagen->id)) {
@@ -77,6 +63,7 @@ class AlbumesController extends AppController
                     $file_src = new File($path_src .$imagen->url);
                     $path_dst = WWW_ROOT . 'img' . DS . 'galeria' . DS;
                     $album->imagenes[$k_image]->url = $this->Random->randomFileName($path_dst, 'album-', $file_src->ext());
+                    $album->imagenes[$k_image]->estado_id = 1;
                     $file_src->copy($path_dst .$album->imagenes[$k_image]->url);
                 }
             }
