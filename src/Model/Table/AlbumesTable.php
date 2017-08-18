@@ -45,7 +45,7 @@ class AlbumesTable extends Table
         
         $this->hasMany('Imagenes', [
             'foreignKey' => 'album_id'
-        ]);
+        ])->setDependent(true);;
     }
 
     public function afterSave($event, $entity, $options) {

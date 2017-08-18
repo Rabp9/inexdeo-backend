@@ -55,8 +55,6 @@ class AlbumesController extends AppController
             $album = $this->Albumes->patchEntity($album, $this->request->data);
             $album->estado_id = 1;
             
-            debug($album);
-            
             foreach ($album->imagenes as $k_image =>$imagen) {
                 if (!isset($imagen->id)) {
                     $path_src = WWW_ROOT . "tmp" . DS;
@@ -140,18 +138,13 @@ class AlbumesController extends AppController
         $album = $this->Albumes->get($this->request->getData('id'));
         
         if ($this->Albumes->delete($album)) {
-            $message = [
-                "type" => "success",
-                "text" => "El Álbum fue eliminado con éxito"
-            ];
+            $code = 200;
+            $message = 'El album fue eliminado correctamente';
         } else {
-            $message = [
-                "type" => "error",
-                "text" => "El Álbum no fue eliminado con éxito",
-            ];
+            $message = 'El album no pudo ser eliminado';
         }
-        
-        $this->set(compact("message"));
+            
+        $this->set(compact('code', "message"));
     }
     
 }
