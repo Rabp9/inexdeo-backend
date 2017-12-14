@@ -26,20 +26,24 @@ class InfosController extends AppController
         $info = $this->Infos->newEntity();
         if ($this->request->is('post')) {
             $info = $this->Infos->patchEntity($info, $this->request->data);
+            if ($info->tipo === 'f') {
+                $path_src = WWW_ROOT . "tmp" . DS;
+                $file_src = new File($path_src . $info->value);
+             
+                $path_dst = WWW_ROOT . 'files' . DS . 'archivos' . DS;
+                $info->value = $this->Random->randomFileName($path_dst, 'info-', $file_src->ext());
+                
+                $file_src->copy($path_dst . $info->value);
+            }
             if ($this->Infos->save($info)) {
-                $message =  [
-                    'text' => __('La información fue guardada correctamente'),
-                    'type' => 'success',
-                ];
+                $code = 200;
+                $message = 'La información fue guardada correctamente';
             } else {
-                $message =  [
-                    'text' => __('La información no fue guardada correctamente'),
-                    'type' => 'error',
-                ];
+                $message = 'La información no fue guardada correctamente';
             }
         }
-        $this->set(compact('info', 'message'));
-        $this->set('_serialize', ['info', 'message']);
+        $this->set(compact('info', 'message', 'code'));
+        $this->set('_serialize', ['info', 'message', 'code']);
     }
     
     /**
@@ -183,31 +187,23 @@ class InfosController extends AppController
         $this->viewBuilder()->layout(false);
         
         if ($this->request->is("post")) {
-            $brochure = $this->request->data["file"];
+            $file = $this->request->data["file"];
             
-            $filename = "doc-" . $this->randomString();
-            $url = WWW_ROOT . "tmp" . DS . $filename;
-            $dst_final = WWW_ROOT . "files". DS . 'brochures' . DS . $filename;
-                        
-            while (file_exists($dst_final)) {
-                $filename = "doc-" . $this->randomString();
-                $url = WWW_ROOT . "tmp" . DS . $filename;
-                $dst_final = WWW_ROOT . "files". DS . 'brochures' . DS . $filename;
-            }
-            
-            if (move_uploaded_file($brochure["tmp_name"], $url)) {
-                $message = [
-                    "type" => "success",
-                    "text" => "El brochure fue subida con éxito"
-                ];
+            $path_dst = WWW_ROOT . "tmp" . DS;
+            $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
+            $filename = 'file-' . $this->Random->randomString() . '.' . $ext;
+           
+            $filename_src = $file["tmp_name"];
+            $file_src = new File($filename_src);
+
+            if ($file_src->copy($path_dst . $filename)) {
+                $code = 200;
+                $message = 'El archivo fue subido correctamente';
             } else {
-                $message = [
-                    "type" => "error",
-                    "text" => "El brochure no fue subida con éxito",
-                ];
+                $message = "La archivo no fue subida con éxito";
             }
             
-            $this->set(compact("message", "filename"));
+            $this->set(compact("code", "message", "filename"));
             $this->set("_serialize", ["message", "filename"]);
         }
     }

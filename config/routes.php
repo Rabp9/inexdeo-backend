@@ -237,6 +237,10 @@ Router::scope('/', function ($routes) {
             'saveFondo' => [
                 'action' => 'saveFondo',
                 'method' => 'POST'
+            ],
+            'previewFile' => [
+                'action' => 'previewFile',
+                'method' => 'POST'
             ]
         ]
     ]);
