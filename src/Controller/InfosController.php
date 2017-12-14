@@ -15,7 +15,7 @@ class InfosController extends AppController
 {
     public function initialize() {
         parent::initialize();
-        $this->Auth->allow(['getDataMany', 'getData', 'getDataByData', 'add']);
+        $this->Auth->allow(['getDataMany', 'getData', 'getDataByData', 'add', 'download']);
     }
     /**
      * Add method
@@ -167,5 +167,48 @@ class InfosController extends AppController
         
         $this->set(compact('fondo', 'message', 'code'));
         $this->set('_serialize', ['fondo', 'message', 'code']);
+    }
+    
+    public function download($id) {
+        $info = $this->Infos->get($id);
+        $file = WWW_ROOT . "files". DS . 'archivos' . DS . $info->value;
+        $response = $this->response->withFile(
+            $file,
+            ['download' => true, 'name' => $info->data . '.pdf']
+        );
+        return $response;
+    }
+    
+    public function previewFile() {
+        $this->viewBuilder()->layout(false);
+        
+        if ($this->request->is("post")) {
+            $brochure = $this->request->data["file"];
+            
+            $filename = "doc-" . $this->randomString();
+            $url = WWW_ROOT . "tmp" . DS . $filename;
+            $dst_final = WWW_ROOT . "files". DS . 'brochures' . DS . $filename;
+                        
+            while (file_exists($dst_final)) {
+                $filename = "doc-" . $this->randomString();
+                $url = WWW_ROOT . "tmp" . DS . $filename;
+                $dst_final = WWW_ROOT . "files". DS . 'brochures' . DS . $filename;
+            }
+            
+            if (move_uploaded_file($brochure["tmp_name"], $url)) {
+                $message = [
+                    "type" => "success",
+                    "text" => "El brochure fue subida con éxito"
+                ];
+            } else {
+                $message = [
+                    "type" => "error",
+                    "text" => "El brochure no fue subida con éxito",
+                ];
+            }
+            
+            $this->set(compact("message", "filename"));
+            $this->set("_serialize", ["message", "filename"]);
+        }
     }
 }
