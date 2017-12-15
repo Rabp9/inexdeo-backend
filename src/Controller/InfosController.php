@@ -15,7 +15,8 @@ class InfosController extends AppController
 {
     public function initialize() {
         parent::initialize();
-        $this->Auth->allow(['getDataMany', 'getData', 'getDataByData', 'add', 'download']);
+        $this->Auth->allow(['getDataMany', 'getData', 'getDataByData', 'add', 'download',
+            'downloadPublic']);
     }
     /**
      * Add method
@@ -175,6 +176,16 @@ class InfosController extends AppController
     
     public function download($id) {
         $info = $this->Infos->get($id);
+        $file = WWW_ROOT . "files". DS . 'archivos' . DS . $info->value;
+        $response = $this->response->withFile(
+            $file,
+            ['download' => true, 'name' => $info->data . '.pdf']
+        );
+        return $response;
+    }
+    
+    public function downloadPublic($data) {
+        $info = $this->Infos->findByData($data)->first();
         $file = WWW_ROOT . "files". DS . 'archivos' . DS . $info->value;
         $response = $this->response->withFile(
             $file,
